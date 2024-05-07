@@ -49,16 +49,16 @@ class DrawingApp:
         )
         self.list_size_brush_button.pack(side=tk.LEFT)
 
-    def change_size_brush(self) -> int:
+    def change_size_brush(self, brush_size) -> int:
         return self.brush_size.get()
 
     def paint(self, event):
         if self.last_x and self.last_y:
             self.canvas.create_line(self.last_x, self.last_y, event.x, event.y,
-                                    width=self.change_size_brush(), fill=self.pen_color,
+                                    width=self.change_size_brush(self.brush_size), fill=self.pen_color,
                                     capstyle=tk.ROUND, smooth=tk.TRUE)
             self.draw.line([self.last_x, self.last_y, event.x, event.y], fill=self.pen_color,
-                           width=self.change_size_brush())
+                           width=self.change_size_brush(self.brush_size))
 
         self.last_x = event.x
         self.last_y = event.y
