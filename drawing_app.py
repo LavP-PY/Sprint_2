@@ -52,8 +52,6 @@ class DrawingApp:
     def change_size_brush(self) -> int:
         return self.brush_size.get()
 
-
-
     def paint(self, event):
         if self.last_x and self.last_y:
             self.canvas.create_line(self.last_x, self.last_y, event.x, event.y,
