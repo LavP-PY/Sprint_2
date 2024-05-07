@@ -14,12 +14,12 @@ class DrawingApp:
         self.canvas = tk.Canvas(root, width=600, height=400, bg='white')
         self.canvas.pack()
 
-        self.control_frame = tk.Frame(self.root)
-        self.control_frame.pack(fill=tk.X)
+        # self.control_frame = tk.Frame(self.root)
+        # self.control_frame.pack(fill=tk.X)
 
         self.setup_ui()
 
-        self.brush()
+        # self.brush()
 
         self.last_x, self.last_y = None, None
         self.pen_color = 'black'
@@ -27,10 +27,11 @@ class DrawingApp:
         self.canvas.bind('<B1-Motion>', self.paint)
         self.canvas.bind('<ButtonRelease-1>', self.reset)
 
-
     def setup_ui(self):
         # control_frame = tk.Frame(self.root)
+        self.control_frame = tk.Frame(self.root)
         # control_frame.pack(fill=tk.X)
+        self.control_frame.pack(fill=tk.X)
 
         clear_button = tk.Button(self.control_frame, text="Очистить", command=self.clear_canvas)
         clear_button.pack(side=tk.LEFT)
@@ -41,11 +42,12 @@ class DrawingApp:
         save_button = tk.Button(self.control_frame, text="Сохранить", command=self.save_image)
         save_button.pack(side=tk.LEFT)
 
+        self.brush()
         # self.brush_size_scale = tk.Scale(control_frame, from_=1, to=10, orient=tk.HORIZONTAL)
         # self.brush_size_scale.pack(side=tk.LEFT)
 
-
     def brush(self) -> None:
+
         sizes = [brush for brush in range(1, 11)]
         # self.brush_size = tk.StringVar(self.root)
         self.brush_size = tk.IntVar(self.root)
@@ -65,8 +67,8 @@ class DrawingApp:
         self.brush_size.get()
 
     # def change_size_brush(self) -> None:
-        # self.brush_size_scale.set(size)
-        # self.brush_size_scale.set(f'Размер кисти - {size}')
+    # self.brush_size_scale.set(size)
+    # self.brush_size_scale.set(f'Размер кисти - {size}')
 
     # def brush(self, control_frame: tk.Frame) -> None:
     #     sizes = [brush for brush in range(1, 11)]
@@ -79,7 +81,6 @@ class DrawingApp:
     #     brush_size_menu.pack(side=tk.LEFT)
 
     def paint(self, event):
-        size = self.change_size_brush()
         if self.last_x and self.last_y:
             # self.canvas.create_line(self.last_x, self.last_y, event.x, event.y,
             #                         width=self.brush_size_scale.get(), fill=self.pen_color,
@@ -88,10 +89,10 @@ class DrawingApp:
             #                width=self.brush_size_scale.get())
 
             self.canvas.create_line(self.last_x, self.last_y, event.x, event.y,
-                                    width=size, fill=self.pen_color,
+                                    width=self.change_size_brush(), fill=self.pen_color,
                                     capstyle=tk.ROUND, smooth=tk.TRUE)
             self.draw.line([self.last_x, self.last_y, event.x, event.y], fill=self.pen_color,
-                           width=size)
+                           width=self.change_size_brush())
 
         self.last_x = event.x
         self.last_y = event.y
