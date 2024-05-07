@@ -14,12 +14,7 @@ class DrawingApp:
         self.canvas = tk.Canvas(root, width=600, height=400, bg='white')
         self.canvas.pack()
 
-        # self.control_frame = tk.Frame(self.root)
-        # self.control_frame.pack(fill=tk.X)
-
         self.setup_ui()
-
-        # self.brush()
 
         self.last_x, self.last_y = None, None
         self.pen_color = 'black'
@@ -28,9 +23,7 @@ class DrawingApp:
         self.canvas.bind('<ButtonRelease-1>', self.reset)
 
     def setup_ui(self):
-        # control_frame = tk.Frame(self.root)
         self.control_frame = tk.Frame(self.root)
-        # control_frame.pack(fill=tk.X)
         self.control_frame.pack(fill=tk.X)
 
         clear_button = tk.Button(self.control_frame, text="Очистить", command=self.clear_canvas)
@@ -43,51 +36,26 @@ class DrawingApp:
         save_button.pack(side=tk.LEFT)
 
         self.brush()
-        # self.brush_size_scale = tk.Scale(control_frame, from_=1, to=10, orient=tk.HORIZONTAL)
-        # self.brush_size_scale.pack(side=tk.LEFT)
 
     def brush(self) -> None:
-
         sizes = [brush for brush in range(1, 11)]
-        # self.brush_size = tk.StringVar(self.root)
         self.brush_size = tk.IntVar(self.root)
-        # self.brush_size.set(f'Размер кисти - {self.brush_size_scale.get()}')
         self.brush_size.set(sizes[0])
-        self.list_size_brush_button = tk.OptionMenu(self.control_frame,
-                                                    # master — это окно, в котором вы хотите разместить OptionMenu
-                                                    self.brush_size,
-                                                    # variable (переменная) означает, что значение виджета не фиксировано
-                                                    # value (значение) зависит от типа переменной
-                                                    *sizes,
-                                                    # *values — это имя списка, в котором мы сохранили все параметры
-                                                    command=self.change_size_brush)  # Это что? встречается также и в вашем коде
-        self.list_size_brush_button.pack(side=tk.LEFT)  # это расположение нашего открывающегося меню
+        self.list_size_brush_button = tk.OptionMenu(
+            self.control_frame,
+            self.brush_size,
+            *sizes,
+            command=self.change_size_brush
+        )
+        self.list_size_brush_button.pack(side=tk.LEFT)
 
-    def change_size_brush(self) -> None:
-        self.brush_size.get()
+    def change_size_brush(self) -> int:
+        return self.brush_size.get()
 
-    # def change_size_brush(self) -> None:
-    # self.brush_size_scale.set(size)
-    # self.brush_size_scale.set(f'Размер кисти - {size}')
 
-    # def brush(self, control_frame: tk.Frame) -> None:
-    #     sizes = [brush for brush in range(1, 11)]
-    #     self.brush_size = tk.StringVar(self.root)
-    #     self.brush_size.set(f'Размер кисти - {self.brush_size_scale.get()}')
-    #     brush_size_menu = tk.OptionMenu(control_frame,
-    #                                     self.brush_size,
-    #                                     *sizes,
-    #                                     command=self.change_size_brush)
-    #     brush_size_menu.pack(side=tk.LEFT)
 
     def paint(self, event):
         if self.last_x and self.last_y:
-            # self.canvas.create_line(self.last_x, self.last_y, event.x, event.y,
-            #                         width=self.brush_size_scale.get(), fill=self.pen_color,
-            #                         capstyle=tk.ROUND, smooth=tk.TRUE)
-            # self.draw.line([self.last_x, self.last_y, event.x, event.y], fill=self.pen_color,
-            #                width=self.brush_size_scale.get())
-
             self.canvas.create_line(self.last_x, self.last_y, event.x, event.y,
                                     width=self.change_size_brush(), fill=self.pen_color,
                                     capstyle=tk.ROUND, smooth=tk.TRUE)
