@@ -11,7 +11,8 @@ class DrawingApp:
         self.image = Image.new("RGB", (600, 400), "white")
         self.draw = ImageDraw.Draw(self.image)
 
-        self.canvas = tk.Canvas(root, width=600, height=400, bg='white')
+        self.background_color = 'white'
+        self.canvas = tk.Canvas(root, width=600, height=400, bg=self.background_color)
         self.canvas.pack()
 
         self.setup_ui()
@@ -26,18 +27,31 @@ class DrawingApp:
         self.control_frame = tk.Frame(self.root)
         self.control_frame.pack(fill=tk.X)
 
-        clear_button = tk.Button(self.control_frame, text="Очистить", command=self.clear_canvas)
+        clear_button = tk.Button(self.control_frame, height=2, text="Очистить", command=self.clear_canvas)
         clear_button.pack(side=tk.LEFT)
 
-        color_button = tk.Button(self.control_frame, text="Выбрать цвет", command=self.choose_color)
+        self.brush_button = tk.Button(self.control_frame, height=2, text="Кисть", bg='pink', activebackground='grey', command=self.brush)
+        self.brush_button.pack(side=tk.LEFT)
+
+        color_button = tk.Button(self.control_frame, height=2, text="Выбрать \n цвет", bg='light blue', activebackground='grey', command=self.choose_color)
         color_button.pack(side=tk.LEFT)
 
-        save_button = tk.Button(self.control_frame, text="Сохранить", command=self.save_image)
+        self.eraser_button = tk.Button(self.control_frame, height=2, text="Стёрка", bg='white', activebackground='grey', command=self.eraser)
+        self.eraser_button.pack(side=tk.LEFT)
+
+        save_button = tk.Button(self.control_frame, height=2, text="Сохранить", command=self.save_image)
         save_button.pack(side=tk.LEFT)
 
-        self.brush()
+        self.brushs_size()
 
-    def brush(self) -> None:
+    def brush(self):
+        self.pen_color = 'black'
+
+    def eraser(self):
+        self.pen_color = self.background_color
+
+
+    def brushs_size(self) -> None:
         sizes = [brush for brush in range(1, 11)]
         self.brush_size = tk.IntVar(self.root)
         self.brush_size.set(sizes[0])
@@ -59,6 +73,7 @@ class DrawingApp:
                                     capstyle=tk.ROUND, smooth=tk.TRUE)
             self.draw.line([self.last_x, self.last_y, event.x, event.y], fill=self.pen_color,
                            width=self.change_size_brush(self.brush_size))
+
 
         self.last_x = event.x
         self.last_y = event.y
