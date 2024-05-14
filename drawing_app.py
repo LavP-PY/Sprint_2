@@ -21,6 +21,8 @@ class DrawingApp:
         self.pen_color = 'black'
 
         self.canvas.bind('<B1-Motion>', self.paint)
+        self.canvas.bind('<Button-3>', self.pick_color)
+
         self.canvas.bind('<ButtonRelease-1>', self.reset)
 
     def setup_ui(self):
@@ -32,6 +34,7 @@ class DrawingApp:
 
         self.brush_button = tk.Button(self.control_frame, height=2, text="Кисть", bg='pink', activebackground='grey', command=self.brush)
         self.brush_button.pack(side=tk.LEFT)
+
 
         color_button = tk.Button(self.control_frame, height=2, text="Выбрать \n цвет", bg='light blue', activebackground='grey', command=self.choose_color)
         color_button.pack(side=tk.LEFT)
@@ -49,7 +52,6 @@ class DrawingApp:
 
     def eraser(self):
         self.pen_color = self.background_color
-
 
     def brushs_size(self) -> None:
         sizes = [brush for brush in range(1, 11)]
@@ -73,10 +75,14 @@ class DrawingApp:
                                     capstyle=tk.ROUND, smooth=tk.TRUE)
             self.draw.line([self.last_x, self.last_y, event.x, event.y], fill=self.pen_color,
                            width=self.change_size_brush(self.brush_size))
-
-
         self.last_x = event.x
         self.last_y = event.y
+
+    def pick_color(self, event):
+        rgb_color = self.image.getpixel((event.x, event.y))
+        self.pen_color = f'#{rgb_color[0]:02x}{rgb_color[1]:02x}{rgb_color[2]:02x}'
+        return self.pen_color
+
 
     def reset(self, event):
         self.last_x, self.last_y = None, None
