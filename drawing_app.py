@@ -7,6 +7,8 @@ class DrawingApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Рисовалка с сохранением в PNG")
+        self.hot_bttn_save = self.root.bind('<Control-s>', self.save_image)
+        self.hot_bttn_choocol = self.root.bind('<Control-c>', self.choose_color)
 
         self.image = Image.new("RGB", (600, 400), "white")
         self.draw = ImageDraw.Draw(self.image)
@@ -92,10 +94,10 @@ class DrawingApp:
         self.image = Image.new("RGB", (600, 400), "white")
         self.draw = ImageDraw.Draw(self.image)
 
-    def choose_color(self):
+    def choose_color(self, hot_bttn_choocol):
         self.pen_color = colorchooser.askcolor(color=self.pen_color)[1]
 
-    def save_image(self):
+    def save_image(self, hot_bttn_save):
         file_path = filedialog.asksaveasfilename(filetypes=[('PNG files', '*.png')])
         if file_path:
             if not file_path.endswith('.png'):
