@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import colorchooser, filedialog, messagebox
 from PIL import Image, ImageDraw
+from tkinter import ttk
 
 
 class DrawingApp:
@@ -37,6 +38,10 @@ class DrawingApp:
         self.brush_button = tk.Button(self.control_frame, height=2, text="Кисть", bg='pink', activebackground='grey', command=self.brush)
         self.brush_button.pack(side=tk.LEFT)
 
+        self.label = ttk.Label(self.control_frame, bg=self.pen_color, width=2)
+        # self.label = ttk.Label(self.control_frame, background='pink', width=2) #self.pen_color
+        self.label.pack(side=tk.LEFT)
+
 
         color_button = tk.Button(self.control_frame, height=2, text="Выбрать \n цвет", bg='light blue', activebackground='grey', command=self.choose_color)
         color_button.pack(side=tk.LEFT)
@@ -50,7 +55,9 @@ class DrawingApp:
         self.brushs_size()
 
     def brush(self):
+        # print(self.pen_color, type(self.pen_color))
         self.pen_color = 'black'
+        # return self.pen_color
 
     def eraser(self):
         self.pen_color = self.background_color
@@ -83,6 +90,8 @@ class DrawingApp:
     def pick_color(self, event):
         rgb_color = self.image.getpixel((event.x, event.y))
         self.pen_color = f'#{rgb_color[0]:02x}{rgb_color[1]:02x}{rgb_color[2]:02x}'
+        print(self.pen_color, type(self.pen_color))
+        self.label.config(bg=self.pen_color)
         return self.pen_color
 
 
@@ -94,10 +103,12 @@ class DrawingApp:
         self.image = Image.new("RGB", (600, 400), "white")
         self.draw = ImageDraw.Draw(self.image)
 
-    def choose_color(self, hot_bttn_choocol):
+    def choose_color(self, hot_bttn_choocol=None):
         self.pen_color = colorchooser.askcolor(color=self.pen_color)[1]
+        self.label.config(bg=self.pen_color)
+        # print(self.pen_color, type(self.pen_color))
 
-    def save_image(self, hot_bttn_save):
+    def save_image(self, hot_bttn_save=None):
         file_path = filedialog.asksaveasfilename(filetypes=[('PNG files', '*.png')])
         if file_path:
             if not file_path.endswith('.png'):
