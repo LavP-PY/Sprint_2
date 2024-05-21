@@ -28,6 +28,8 @@ class DrawingApp:
 
         self.canvas.bind('<ButtonRelease-1>', self.reset)
 
+        self.label.config(background=self.pen_color)
+
     def setup_ui(self):
         self.control_frame = tk.Frame(self.root)
         self.control_frame.pack(fill=tk.X)
@@ -38,8 +40,7 @@ class DrawingApp:
         self.brush_button = tk.Button(self.control_frame, height=2, text="Кисть", bg='pink', activebackground='grey', command=self.brush)
         self.brush_button.pack(side=tk.LEFT)
 
-        self.label = ttk.Label(self.control_frame, bg=self.pen_color, width=2)
-        # self.label = ttk.Label(self.control_frame, background='pink', width=2) #self.pen_color
+        self.label = ttk.Label(self.control_frame, width=2)
         self.label.pack(side=tk.LEFT)
 
 
@@ -57,7 +58,6 @@ class DrawingApp:
     def brush(self):
         # print(self.pen_color, type(self.pen_color))
         self.pen_color = 'black'
-        # return self.pen_color
 
     def eraser(self):
         self.pen_color = self.background_color
@@ -91,7 +91,7 @@ class DrawingApp:
         rgb_color = self.image.getpixel((event.x, event.y))
         self.pen_color = f'#{rgb_color[0]:02x}{rgb_color[1]:02x}{rgb_color[2]:02x}'
         print(self.pen_color, type(self.pen_color))
-        self.label.config(bg=self.pen_color)
+        self.label.config(background=self.pen_color)
         return self.pen_color
 
 
@@ -105,7 +105,8 @@ class DrawingApp:
 
     def choose_color(self, hot_bttn_choocol=None):
         self.pen_color = colorchooser.askcolor(color=self.pen_color)[1]
-        self.label.config(bg=self.pen_color)
+        self.label.config(background=self.pen_color)
+        return self.pen_color
         # print(self.pen_color, type(self.pen_color))
 
     def save_image(self, hot_bttn_save=None):
