@@ -2,14 +2,19 @@ import tkinter as tk
 from tkinter import colorchooser, filedialog, messagebox
 from PIL import Image, ImageDraw
 from tkinter import ttk
+from tkinter import simpledialog
+
+from tkinter import Menu
 
 
 class DrawingApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Рисовалка с сохранением в PNG")
-        self.hot_bttn_save = self.root.bind('<Control-s>', self.save_image)
-        self.hot_bttn_choocol = self.root.bind('<Control-c>', self.choose_color)
+
+        self.menus_string()
+
+        self.hot_buttons()
 
         self.image = Image.new("RGB", (600, 400), "white")
         self.draw = ImageDraw.Draw(self.image)
@@ -30,9 +35,29 @@ class DrawingApp:
 
         self.label.config(background=self.pen_color)
 
+    def hot_buttons(self):
+        self.hot_bttn_save = self.root.bind('<Control-s>', self.save_image)
+        self.hot_bttn_choocol = self.root.bind('<Control-c>', self.choose_color)
+
+    def menus_string(self):
+        mainmenu = Menu(self.root)
+        self.root.config(menu=mainmenu)
+
+        file_menu = Menu(mainmenu, tearoff=0)
+        file_menu.add_command(label="Сохранить как...", command=self.save_image)
+
+        paramets_menu = Menu(mainmenu, tearoff=0)
+        paramets_menu.add_command(label="Размер холста", command=self.canvas_size)
+
+        mainmenu.add_cascade(label="Файл", menu=file_menu)
+        mainmenu.add_cascade(label="Параметры", menu=paramets_menu)
+
     def setup_ui(self):
         self.control_frame = tk.Frame(self.root)
         self.control_frame.pack(fill=tk.X)
+
+        # save_button = tk.Button(self.control_frame, height=2, text="Сохранить", command=self.save_image)
+        # save_button.pack(side=tk.LEFT)
 
         clear_button = tk.Button(self.control_frame, height=2, text="Очистить", command=self.clear_canvas)
         clear_button.pack(side=tk.LEFT)
@@ -43,17 +68,25 @@ class DrawingApp:
         self.label = ttk.Label(self.control_frame, width=2)
         self.label.pack(side=tk.LEFT)
 
-
         color_button = tk.Button(self.control_frame, height=2, text="Выбрать \n цвет", bg='light blue', activebackground='grey', command=self.choose_color)
         color_button.pack(side=tk.LEFT)
 
         self.eraser_button = tk.Button(self.control_frame, height=2, text="Стёрка", bg='white', activebackground='grey', command=self.eraser)
         self.eraser_button.pack(side=tk.LEFT)
 
-        save_button = tk.Button(self.control_frame, height=2, text="Сохранить", command=self.save_image)
-        save_button.pack(side=tk.LEFT)
-
         self.brushs_size()
+
+    def canvas_size(self):
+        self.width_users_size = tk.simpledialog.askinteger("Параметры холста", prompt="Ширина")
+        self.high_users_size = tk.simpledialog.askinteger("Параметры холста", prompt="Высота")
+        # self.image.close()
+        # # self.root.title("Рисовалка2")
+        # self.image = Image.new("RGB", (self.width_users_size, self.high_users_size), "white")
+        # self.draw = ImageDraw.Draw(self.image)
+        self.canvas = tk.Canvas(self.root, width=self.width_users_size, height=self.high_users_size, bg=self.background_color)
+        self.canvas.pack()
+
+        # pass
 
     def brush(self):
         # print(self.pen_color, type(self.pen_color))
