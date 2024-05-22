@@ -79,14 +79,8 @@ class DrawingApp:
     def canvas_size(self):
         self.width_users_size = tk.simpledialog.askinteger("Параметры холста", prompt="Ширина")
         self.high_users_size = tk.simpledialog.askinteger("Параметры холста", prompt="Высота")
-        # self.image.close()
-        # # self.root.title("Рисовалка2")
-        # self.image = Image.new("RGB", (self.width_users_size, self.high_users_size), "white")
-        # self.draw = ImageDraw.Draw(self.image)
-        self.canvas = tk.Canvas(self.root, width=self.width_users_size, height=self.high_users_size, bg=self.background_color)
-        self.canvas.pack()
+        self.canvas.config(width=self.width_users_size, height=self.high_users_size)
 
-        # pass
 
     def brush(self):
         # print(self.pen_color, type(self.pen_color))
