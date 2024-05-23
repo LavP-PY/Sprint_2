@@ -37,7 +37,9 @@ class DrawingApp:
 
     def hot_buttons(self):
         self.hot_bttn_save = self.root.bind('<Control-s>', self.save_image)
+        # self.hot_bttn_save = self.root.bind('<Control-ы>', self.save_image)
         self.hot_bttn_choocol = self.root.bind('<Control-c>', self.choose_color)
+        # self.hot_bttn_choocol = self.root.bind('<Control-с>', self.choose_color)
 
     def menus_string(self):
         mainmenu = Menu(self.root)
@@ -48,9 +50,14 @@ class DrawingApp:
 
         paramets_menu = Menu(mainmenu, tearoff=0)
         paramets_menu.add_command(label="Размер холста", command=self.canvas_size)
+        paramets_menu.add_command(label="Цвет фона", command=self.background_color)
+
+        painting_menu = Menu(mainmenu, tearoff=0)
+        painting_menu.add_command(label="Очистить холст", command=self.clear_canvas)
 
         mainmenu.add_cascade(label="Файл", menu=file_menu)
         mainmenu.add_cascade(label="Параметры", menu=paramets_menu)
+        mainmenu.add_cascade(label="Рисование", menu=painting_menu)
 
     def setup_ui(self):
         self.control_frame = tk.Frame(self.root)
@@ -59,8 +66,11 @@ class DrawingApp:
         # save_button = tk.Button(self.control_frame, height=2, text="Сохранить", command=self.save_image)
         # save_button.pack(side=tk.LEFT)
 
-        clear_button = tk.Button(self.control_frame, height=2, text="Очистить", command=self.clear_canvas)
-        clear_button.pack(side=tk.LEFT)
+        # clear_button = tk.Button(self.control_frame, height=2, text="Очистить", command=self.clear_canvas)
+        # clear_button.pack(side=tk.LEFT)
+
+        self.brush_button = tk.Button(self.control_frame, height=2, text="Текст", bg='light green', activebackground='grey', command=self.about_txt)
+        self.brush_button.pack(side=tk.LEFT)
 
         self.brush_button = tk.Button(self.control_frame, height=2, text="Кисть", bg='pink', activebackground='grey', command=self.brush)
         self.brush_button.pack(side=tk.LEFT)
@@ -81,10 +91,26 @@ class DrawingApp:
         self.high_users_size = tk.simpledialog.askinteger("Параметры холста", prompt="Высота")
         self.canvas.config(width=self.width_users_size, height=self.high_users_size)
 
+    def about_txt(self):
+        self.users_text = simpledialog.askstring("Вставка текста", "Введите текст:")
+        self.canvas.bind('<B1-Motion>', self.add_text)
+    def add_text(self, event):
+        self.canvas.create_text(event.x, event.y, text=self.users_text, fill=self.pen_color, font="Verdana 14")
+        ImageDraw.ImageDraw(self.image).text((event.x, event.y), text=self.users_text, fill=self.pen_color)
+        # if self.last_x and self.last_y:
+        #     self.canvas.create_text(self.last_x, self.last_y, text=self.users_text, fill=self.pen_color)
+        #     ImageDraw.ImageDraw(self.image).text((event.x, event.y), text=self.users_text, fill=self.pen_color)
+        # self.last_x = event.x
+        # self.last_y = event.y
+
+    def background_color(self):
+        new_color = colorchooser.askcolor()[1]
+        self.canvas.config(background=new_color)
+        self.background_color = new_color
 
     def brush(self):
-        # print(self.pen_color, type(self.pen_color))
         self.pen_color = 'black'
+        self.canvas.bind('<B1-Motion>', self.paint)
 
     def eraser(self):
         self.pen_color = self.background_color
