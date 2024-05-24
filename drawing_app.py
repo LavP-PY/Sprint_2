@@ -118,6 +118,9 @@ class DrawingApp:
         self.control_frame = tk.Frame(self.root)
         self.control_frame.pack(fill=tk.X)
 
+        self.brush_button = tk.Button(self.control_frame, height=2, text="Текст", bg='green', activebackground='grey', command=self.about_txt_add)
+        self.brush_button.pack(side=tk.LEFT)
+
         self.brush_button = tk.Button(self.control_frame, height=2, text="Рисование \n текстом", bg='light green', activebackground='grey', command=self.about_txt)
         self.brush_button.pack(side=tk.LEFT)
 
@@ -146,13 +149,26 @@ class DrawingApp:
         self.high_users_size = tk.simpledialog.askinteger("Параметры холста", prompt="Высота")
         self.canvas.config(width=self.width_users_size, height=self.high_users_size)
 
+
+
+    def about_txt_add(self) -> None:
+        """
+        :return: None
+        """
+        self.users_text = simpledialog.askstring("Вставка текста", "Введите текст:")
+        self.canvas.bind('<B1-Motion>', self.add_text)
+
+    def add_text(self, event):
+        ImageDraw.ImageDraw(self.image).text((event.x, event.y), text=self.users_text, fill=self.pen_color, anchor="ms")
+
+
     def about_txt(self) -> None:
         """
         Метод вызывающий диалоговое окно ввода текста.
         Связывает действие левой кнопки мыши на холсте с методом painting_with_text(), отвечающий за рисование текстом.
         :return: None
         """
-        self.users_text = simpledialog.askstring("Вставка текста", "Введите текст:")
+        self.users_text_brush = simpledialog.askstring("Вставка текста", "Введите текст:")
         self.canvas.bind('<B1-Motion>', self.painting_with_text)
 
     def painting_with_text(self, event) -> None:
@@ -162,8 +178,8 @@ class DrawingApp:
         :param event:
         :return: None
         """
-        self.canvas.create_text(event.x, event.y, text=self.users_text, fill=self.pen_color, font="Verdana 14")
-        ImageDraw.ImageDraw(self.image).text((event.x, event.y), text=self.users_text, fill=self.pen_color)
+        self.canvas.create_text(event.x, event.y, text=self.users_text_brush, fill=self.pen_color, font="Verdana 14")
+        # ImageDraw.ImageDraw(self.image).text((event.x, event.y), text=self.users_text_brush, fill=self.pen_color)
         # if self.last_x and self.last_y:
         #     self.canvas.create_text(self.last_x, self.last_y, text=self.users_text, fill=self.pen_color)
         #     ImageDraw.ImageDraw(self.image).text((event.x, event.y), text=self.users_text, fill=self.pen_color)
